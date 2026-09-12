@@ -49,6 +49,11 @@ def build_parser():
         "list-projects", help="List all projects or only one user's projects."
     )
     list_projects.add_argument("--user", help="Optional owner name to filter by.")
+    list_projects.add_argument(
+        "--overdue",
+        action="store_true",
+        help="Show only projects that are past due with open work.",
+    )
 
     show_project = subparsers.add_parser(
         "show-project", help="Show project details and its tasks."
@@ -77,6 +82,15 @@ def build_parser():
 
     list_tasks = subparsers.add_parser("list-tasks", help="List tasks on a project.")
     list_tasks.add_argument("--project", required=True, help="Project title.")
+    list_tasks.add_argument(
+        "--status", help="Optional status filter: todo, in_progress, or complete."
+    )
+
+    start_task = subparsers.add_parser(
+        "start-task", help="Mark a task in progress and save the change."
+    )
+    start_task.add_argument("--project", required=True, help="Project title.")
+    start_task.add_argument("--task", required=True, help="Task title.")
 
     complete_task = subparsers.add_parser(
         "complete-task", help="Mark a task complete and save the change."

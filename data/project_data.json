@@ -59,7 +59,7 @@
     {
       "id": 3,
       "title": "Outline setup guide",
-      "status": "todo",
+      "status": "in_progress",
       "project_id": 2,
       "assigned_to_id": 2,
       "contributor_ids": [
