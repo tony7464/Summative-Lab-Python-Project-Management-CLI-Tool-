@@ -1,0 +1,75 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Alex",
+      "email": "alex@example.com"
+    },
+    {
+      "id": 2,
+      "name": "Jordan",
+      "email": "jordan@example.com"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "title": "CLI Tool",
+      "description": "Build project tracker",
+      "due_date": "2026-10-15",
+      "owner_id": 1,
+      "task_ids": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Docs Site",
+      "description": "Team documentation",
+      "due_date": "2026-11-01",
+      "owner_id": 2,
+      "task_ids": [
+        3
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Implement add-task command",
+      "status": "complete",
+      "project_id": 1,
+      "assigned_to_id": 1,
+      "contributor_ids": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Write README",
+      "status": "in_progress",
+      "project_id": 1,
+      "assigned_to_id": 2,
+      "contributor_ids": [
+        2
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Outline setup guide",
+      "status": "todo",
+      "project_id": 2,
+      "assigned_to_id": 2,
+      "contributor_ids": [
+        2
+      ]
+    }
+  ],
+  "meta": {
+    "user_id_counter": 3,
+    "project_id_counter": 3,
+    "task_id_counter": 4
+  }
+}
