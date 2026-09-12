@@ -61,6 +61,8 @@ python main.py add-user --help
 
 If no command is given, the tool prints the full help text.
 
+The repository includes sample data in `data/project_data.json` so `list-users` and `list-projects` work immediately after setup.
+
 ## Example commands
 
 ```bash
@@ -84,7 +86,10 @@ python main.py complete-task --project "CLI Tool" \
 
 python main.py list-users
 python main.py list-projects --user "Alex"
+python main.py list-projects --overdue
 python main.py list-tasks --project "CLI Tool"
+python main.py list-tasks --project "CLI Tool" --status in_progress
+python main.py start-task --project "Docs Site" --task "Outline setup guide"
 python main.py show-project --project "CLI Tool"
 
 python main.py edit-project --title "CLI Tool" --due-date "October 15, 2026"

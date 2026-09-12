@@ -2,6 +2,7 @@
 
 from services.ai_client import InsightService
 from utils.errors import TrackerError
+from utils.validators import normalize_status
 from utils.formatters import (
     format_insight,
     format_project_detail,
@@ -35,6 +36,7 @@ def dispatch(args, storage):
         "edit-project": edit_project,
         "add-task": add_task,
         "list-tasks": list_tasks,
+        "start-task": start_task,
         "complete-task": complete_task,
         "edit-task": edit_task,
         "add-contributor": add_contributor,
@@ -99,11 +101,18 @@ def list_projects(args, storage):
         args: Parsed arguments with optional user filter.
         storage: Loaded StorageService.
     """
+    projects = storage.projects
+    heading = "Projects"
     if args.user:
         user = storage.require_user(args.user)
-        format_projects(user.projects, heading=f"Projects · {user.name}")
-        return
-    format_projects(storage.projects)
+        projects = user.projects
+        heading = f"Projects · {user.name}"
+    empty_message = "No projects found. Add one with add-project."
+    if args.overdue:
+        projects = [project for project in projects if project.is_overdue]
+        heading = f"{heading} · overdue"
+        empty_message = "No overdue projects."
+    format_projects(projects, heading=heading, empty_message=empty_message)
 
 
 def show_project(args, storage):
@@ -174,7 +183,28 @@ def list_tasks(args, storage):
         storage: Loaded StorageService.
     """
     project = storage.require_project(args.project)
+    if args.status:
+        status = normalize_status(args.status)
+        filtered = [task for task in project.tasks if task.status == status]
+        format_tasks(project, tasks=filtered, status_filter=status)
+        return
     format_tasks(project)
+
+
+def start_task(args, storage):
+    """Mark a task in progress and save.
+
+    Args:
+        args: Parsed arguments with project and task titles.
+        storage: Loaded StorageService.
+    """
+    project = storage.require_project(args.project)
+    task = storage.require_task(project, args.task)
+    if task.is_complete:
+        raise ValueError(f"Task '{task.title}' is already complete.")
+    task.start()
+    storage.save()
+    print_success(f"Started '{task.title}' on '{project.title}'.")
 
 
 def complete_task(args, storage):

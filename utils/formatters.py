@@ -69,12 +69,13 @@ def format_users(users):
     )
 
 
-def format_projects(projects, heading="Projects"):
+def format_projects(projects, heading="Projects", empty_message=None):
     """Display the project list.
 
     Args:
         projects: Collection of Project objects.
         heading: Optional table title.
+        empty_message: Optional text shown when there are no rows.
     """
     rows = []
     for project in projects:
@@ -95,26 +96,35 @@ def format_projects(projects, heading="Projects"):
         heading,
         ["ID", "Title", "Owner", "Due", "Progress", "Tasks"],
         rows,
-        empty_message="No projects found. Add one with add-project.",
+        empty_message=empty_message or "No projects found. Add one with add-project.",
     )
 
 
-def format_tasks(project):
+def format_tasks(project, tasks=None, status_filter=None):
     """Display tasks for a single project.
 
     Args:
         project: Project whose tasks should be listed.
+        tasks: Optional subset of tasks to display.
+        status_filter: Optional status label included in the heading.
     """
+    items = project.tasks if tasks is None else list(tasks)
     rows = []
-    for task in project.tasks:
+    for task in items:
         assignee = task.assigned_to.name if task.assigned_to else "—"
         contributors = ", ".join(user.name for user in task.contributors) or "—"
         rows.append([task.id, task.title, task.status, assignee, contributors])
+    heading = f"Tasks · {project.title}"
+    if status_filter:
+        heading = f"{heading} · {status_filter}"
+    empty = f"No tasks on '{project.title}' yet. Add one with add-task."
+    if status_filter:
+        empty = f"No '{status_filter}' tasks on '{project.title}'."
     print_table(
-        f"Tasks · {project.title}",
+        heading,
         ["ID", "Title", "Status", "Assigned To", "Contributors"],
         rows,
-        empty_message=f"No tasks on '{project.title}' yet. Add one with add-task.",
+        empty_message=empty,
     )
 
 
